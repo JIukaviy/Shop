@@ -1,0 +1,147 @@
+{% extends 'index.html.twig' %}
+{% block title %}Корзина{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('assets/vendor/js-cookie/src/js.cookie.js') }}"></script>
+	<script src="{{ asset('js/cart.js') }}"></script>
+	<script src="{{ asset('js/backend_api.js') }}"></script>
+	<script>
+		function showAlert(message) {
+			$("#alert").addClass("alert-danger").css("display", "block").find("#alertMessage").text(message);
+		}
+		function addOnFail(dfd) {
+			return dfd.fail(function (message) {
+				showAlert(message);
+			})
+		}
+		$(function() {
+			var item_row_group = $("#itemRowGroup");
+			cart.onempty(function () {
+				item_row_group.empty();
+				item_row_group.append("<h3>Ваша корзина пуста</h3>");
+			});
+			addOnFail(cart.draw(item_row_group, $("#itemRow"), function (temp, item_info) {
+				temp.find("#itemPreview").attr("src", item_info['preview']);
+				temp.find("#itemName").text(item_info['name']);
+				temp.find("#itemCount").val(item_info['count']).change(function () {
+					cart.set_item(item_info['id'], temp.find("#itemCount").val());
+				});
+				temp.find("#itemPrice").text(item_info['price'] + ' р.');
+				temp.find("#itemRemove").click(function () {
+					cart.remove_item(item_info['id']);
+					temp.remove();
+				});
+			}).done(function () {
+				$("#itemHeaderRow").css("display", "block");
+				var item_footer_row = $("#itemFooterRow");
+				var add_order_btn = item_footer_row.find("#addOrderBtn");
+				item_footer_row.css("display", "block").appendTo(item_row_group);
+				add_order_btn.click(function () {
+					var add_order_btn_loading = add_order_btn.find("#addOrderBtnLoading");
+					add_order_btn_loading.css("display", "inline-block");
+					add_order_btn.addClass("disabled");
+					addOnFail(cart.confirm_order().done(function () {
+						item_row_group.empty();
+						cart.clear();
+						$("#orderConfirmed").modal();
+					})).fail(function () {
+						add_order_btn_loading.hide();
+					});
+				});
+				cart.onchange(function () {
+					var items_price = item_footer_row.find("#itemsPrice");
+					var items_count = item_footer_row.find("#itemsCount");
+					addOnFail(cart.get_cart_info().done(function (count, total_price) {
+						items_price.text(total_price);
+						items_count.text(count);
+					}));
+				})();
+			}));
+		});
+	</script>
+{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/good_info.css') }}">
+{% endblock %}
+{% block content_header %}
+	<div class="well well-sm">
+		Корзина
+	</div>
+{% endblock %}
+{% block content %}
+	<div class="container-fluid" id="content">
+		<div class="alert" id="alert" style="display: none">
+			<strong>Ошибка!</strong> <span id="alertMessage"></span>
+		</div>
+		<div class="item-row-group" id="itemRowGroup">
+			{% embed 'cart/cart_row.html.twig' with { row_id: 'itemHeaderRow', display: 'none' } %}{% block row_content %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+				{% endblock %}{% endembed %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 4 } %}{% block col_content %}
+					<h4 class="text-center">Наименование товара</h4>
+				{% endblock %}{% endembed %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+					<h4>Количество</h4>
+				{% endblock %}{% endembed %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+					<h4>Цена</h4>
+				{% endblock %}{% endembed %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+				{% endblock %}{% endembed %}
+			{% endblock %}{% endembed %}
+
+			{% embed 'cart/cart_row.html.twig' with { row_id: 'itemRow', display: 'none' } %}{% block row_content %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+					<div class="item-preview">
+						<img id="itemPreview">
+					</div>
+				{% endblock %}{% endembed %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 4 } %}{% block col_content %}
+					<h4 class="text-center" id="itemName">Example</h4>
+				{% endblock %}{% endembed %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+					<input id="itemCount" class="form-control" type="number" min="1" max="999" value="1" step="1">
+				{% endblock %}{% endembed %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+					<h4 id="itemPrice">5000</h4>
+				{% endblock %}{% endembed %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+					<button class="btn btn-default" id="itemRemove"><span class="glyphicon glyphicon-remove"></span></button>
+				{% endblock %}{% endembed %}
+			{% endblock %}{% endembed %}
+
+			{% embed 'cart/cart_row.html.twig' with { row_id: 'itemFooterRow', display: 'none' } %}{% block row_content %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 9 } %}{% block col_content %}
+					<h4 class="text-center" id="itemName">
+						Итого товаров: <b id="itemsCount">15</b>,
+						на общую сумму: <b id="itemsPrice">10</b> р.
+					</h4>
+				{% endblock %}{% endembed %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 3 } %}{% block col_content %}
+					<button class="btn btn-warning" id="addOrderBtn">
+						Оформить заказ
+						<img id="addOrderBtnLoading" src="{{ asset('img/loading24x24.gif') }}" style="display: none">
+					</button>
+				{% endblock %}{% endembed %}
+			{% endblock %}{% endembed %}
+		</div>
+
+		<div id="orderConfirmed" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Информация</h4>
+					</div>
+					<div class="modal-body">
+						<h4>Ваш заказ отправлен!</h4>
+					</div>
+					<div class="modal-footer">
+						<a href="{{ path('shop') }}" class="btn btn-default">Продолжить покупки</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'index_var.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/vendor/jquery-ui/themes/base/theme.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/vendor/jquery/dist/jquery.js') }}"></script>
+    <script src="{{ asset('assets/vendor/jqGrid/js/jquery.jqGrid.js') }}"></script>
+    <script src="{{ asset('assets/vendor/jqGrid/js/i18n/grid.locale-ru.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <table id="theGrid"><tr><td></td></tr></table>
+    <div id="gridPager"></div>
+
+    <script>
+        $(document).ready(function () {
+            'use strict';
+            $.fn.jqm = null;
+            var gidData = [
+                        {id: "1", orderdate: "2013-10-01", customer: "customer",  price: "200.00", vat: "10.00", completed: true, shipment: "TN", total: "210.00"},
+                        {id: "2", orderdate: "2013-10-02", customer: "customer2",  price: "300.00", vat: "20.00", completed: false, shipment: "FE", total: "320.00"},
+                        {id: "3", orderdate: "2011-07-30", customer: "customer3",  price: "400.00", vat: "30.00", completed: false, shipment: "FE", total: "430.00"},
+                        {id: "4", orderdate: "2013-10-04", customer: "customer4",  price: "200.00", vat: "10.00", completed: true, shipment: "TN", total: "210.00"},
+                        {id: "5", orderdate: "2013-11-31", customer: "customer5",  price: "300.00", vat: "20.00", completed: false, shipment: "FE", total: "320.00"},
+                        {id: "6", orderdate: "2013-09-06", customer: "customer6",  price: "400.00", vat: "30.00", completed: false, shipment: "FE", total: "430.00"},
+                        {id: "7", orderdate: "2011-08-30", customer: "customer7",  price: "200.00", vat: "10.00", completed: true, shipment: "TN", total: "210.00"},
+                        {id: "8", orderdate: "2013-10-03", customer: "customer8",  price: "300.00", vat: "20.00", completed: false, shipment: "FE", total: "320.00"},
+                        {id: "9", orderdate: "2013-09-01", customer: "customer9",  price: "400.00", vat: "30.00", completed: false, shipment: "TN", total: "430.00"},
+                        {id: "10", orderdate: "2013-09-08", customer: "customer10", price: "500.00", vat: "30.00", completed: true, shipment: "IN", total: "530.00"},
+                        {id: "11", orderdate: "2013-09-08", customer: "customer11",  price: "500.00", vat: "30.00", completed: false, shipment: "FE", total: "530.00"},
+                        {id: "12", orderdate: "2013-09-10", customer: "customer12",  price: "500.00", vat: "30.00", completed: false, shipment: "FE", total: "530.00"}
+                    ],
+                    theGrid = $("#theGrid"),
+                    numberTemplate = {formatter: 'number', align: 'right', sorttype: 'number'},
+                    horizontalScrollPosition = 0,
+                    selectedRow = null,
+                    saveSelectedRow = function () {
+                        var $grid = $(this);
+                        selectedRow = $grid.jqGrid('getGridParam', 'selrow');
+
+                        horizontalScrollPosition = this.grid.bDiv.scrollLeft;
+                    },
+                    selectSavedRow = function () {
+                        var $grid = $(this);
+
+                        if (selectedRow) {
+                            $grid.jqGrid("setSelection", selectedRow, false);
+                            selectedRow = null;
+                        }
+                        this.grid.bDiv.scrollLeft = horizontalScrollPosition;
+                    };
+
+            theGrid.jqGrid({
+                datatype: 'local',
+                data: gidData,
+                colNames: ['Customer', 'Date', 'Price', 'VAT', 'Total', 'Completed', 'Shipment'],
+                colModel: [
+                    {name: 'customer', index: 'customer', width: 90},
+                    {name: 'orderdate', index: 'orderdate', width: 100, align: 'center', sorttype: 'date',
+                        formatter: 'date', formatoptions: {newformat: 'd-M-Y'}, datefmt: 'd-M-Y'},
+                    {name: 'price', index: 'price', width: 55, template: numberTemplate},
+                    {name: 'vat', index: 'vat', width: 42, template: numberTemplate},
+                    {name: 'total', index: 'total', width: 50, template: numberTemplate},
+                    {name: 'completed', index: 'completed', width: 30, align: 'center', formatter: 'checkbox',
+                        edittype: 'checkbox', editoptions: {value: 'Yes:No', defaultValue: 'Yes'}},
+                    {name: 'shipment', index: 'shipment', width: 80, align: 'center', formatter: 'select',
+                        edittype: 'select', editoptions: {value: 'FE:FedEx;TN:TNT;IN:Intime;us:USPS', defaultValue: 'Intime'}}
+                ],
+                gridview: true,
+                rownumbers: false,
+                rowNum: 10,
+                rowList: [5, 10, 15],
+                pager: '#gridPager',
+                sortname: 'price',
+                viewrecords: true,
+                sortorder: 'desc',
+                caption: 'Preserving Selection on Client-side sorting',
+                height: '100%',
+                onSortCol: function () {
+                    saveSelectedRow.call(this);
+                },
+                loadComplete: function () {
+                    selectSavedRow.call(this);
+                }
+            });
+        });
+    </script>
+{% endblock %}

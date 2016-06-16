@@ -1,0 +1,52 @@
+{% extends 'index.html.twig' %}
+{% block title %}Информация о заказе{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/good_info.css') }}">
+{% endblock %}
+{% block content_header %}
+	<p class="well well-sm">Заказ от {{ order.date|date('Y-m-d') }}</p>
+{% endblock %}
+{% block content %}
+	<div class="container-fluid item-row-group">
+		{% embed 'cart/cart_row.html.twig' with { row_id: 'itemHeaderRow' } %}{% block row_content %}
+			{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+			{% endblock %}{% endembed %}
+			{% embed 'cart/cart_col.html.twig' with { col_size: 4 } %}{% block col_content %}
+				<h4 class="text-center">Наименование товара</h4>
+			{% endblock %}{% endembed %}
+			{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+				<h4>Количество</h4>
+			{% endblock %}{% endembed %}
+			{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+				<h4>Цена</h4>
+			{% endblock %}{% endembed %}
+		{% endblock %}{% endembed %}
+		{% for order_item in order.getOrderItems %}
+			{% embed 'cart/cart_row.html.twig' with { row_id: 'itemRow' } %}{% block row_content %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+					<div class="item-preview">
+						<img id="itemPreview" src="{{ order_item.item.preview }}">
+					</div>
+				{% endblock %}{% endembed %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 4 } %}{% block col_content %}
+					<h4 class="text-center" id="itemName">{{ order_item.item.name }}</h4>
+				{% endblock %}{% endembed %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+					<h4 id="itemCount">{{ order_item.count }}</h4>
+				{% endblock %}{% endembed %}
+				{% embed 'cart/cart_col.html.twig' with { col_size: 2 } %}{% block col_content %}
+					<h4 id="itemPrice">{{ order_item.price }}</h4>
+				{% endblock %}{% endembed %}
+			{% endblock %}{% endembed %}
+		{% endfor %}
+		{% embed 'cart/cart_row.html.twig' with { row_id: 'itemFooterRow' } %}{% block row_content %}
+			{% embed 'cart/cart_col.html.twig' with { col_size: 12 } %}{% block col_content %}
+				<h4 class="text-center" id="itemName">
+					Итого товаров: <b id="itemsCount">{{ order.getTotalCount }}</b>,
+					на общую сумму: <b id="itemsPrice">{{ order.getTotalPrice }}</b> р.
+				</h4>
+			{% endblock %}{% endembed %}
+		{% endblock %}{% endembed %}
+	</div>
+{% endblock %}

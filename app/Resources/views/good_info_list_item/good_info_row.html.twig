@@ -1,0 +1,17 @@
+<div class="item-row">
+	<a href="{{ path('good_info', {'id': item.id}) }}">
+		<div class="row">
+			<div class="col-lg-3">
+				<div class="item-preview">
+					<img src="{{ item.preview }}">
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<p>{{ item.name }}</p>
+			</div>
+			<div class="col-lg-3">
+				<p>{{ item.price }} р.</p>
+			</div>
+		</div>
+	</a>
+</div>

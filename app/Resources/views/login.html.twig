@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/block_site_style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/authorization.css') }}">
+{% endblock %}
+{% block title %}Войти{% endblock %}
+{% block body %}
+    {% if error %}
+        <div class="error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+    <div class="main_block shadow">
+        {{ form_start(login_form) }}
+        {{ form_row(login_form.username) }}
+        {{ form_row(login_form.password) }}
+        {{ form_row(login_form.submit) }}
+        {{ form_end(login_form) }}
+    </div>
+{% endblock %}

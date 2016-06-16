@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('css/block_site_style.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/authorization.css') }}">
+{% endblock %}
+{% block title %}Регистрация{% endblock %}
+{% block body %}
+	<div class="main_block shadow">
+		{{ form_start(register_form) }}
+		{{ form_row(register_form.username) }}
+		{{ form_row(register_form.password) }}
+		{{ form_row(register_form.submit) }}
+		{{ form_end(register_form) }}
+	</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'index.html.twig' %}
+
+{% block title %}Мои заказы{% endblock %}
+
+{% block content_header %}
+	<p class="well well-sm">Мои заказы</p>
+{% endblock %}
+{% block content %}
+	{% if pagination.items %}
+		<table class="table">
+			<tr><th>Дата</th><th>Статус</th></tr>
+			{% for order in pagination %}
+				<tr><td><a href="{{ path('order_info', {id: order.id}) }}">{{ order.date|date('Y-m-d') }}</a></td><td>{{ order.status.name }}</td></tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<h2>В настоящий момент у вас нет заказов</h2>
+	{% endif %}
+{% endblock %}

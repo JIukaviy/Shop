@@ -1,0 +1,39 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/book/security.html
+security:
+    encoders:
+        AppBundle\Entity\DBUser:
+            algorithm: bcrypt
+
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        users_db_provider:
+            entity:
+                class: 'AppBundle:DBUser'
+                property: username
+    firewalls:
+        main:
+            provider: users_db_provider
+            form_login:
+                check_path: /login_check
+                login_path: /login
+                username_parameter: 'form[username]'
+                password_parameter: 'form[password]'
+            logout:
+                path: /logout
+                target: /
+            security: true
+            anonymous: true
+            # activate different ways to authenticate
+
+            # http_basic: ~
+            # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: ~
+            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+
+    access_control:
+        - { path: /admin, roles: ROLE_ADMIN }
+        - { path: /cart, roles: [ROLE_USER, ROLE_ADMIN] }
+        - { path: /my_orders, roles: [ROLE_USER, ROLE_ADMIN] }
+        - { path: /order_info, roles: [ROLE_USER, ROLE_ADMIN] }

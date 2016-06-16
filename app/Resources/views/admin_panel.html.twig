@@ -1,0 +1,39 @@
+{% extends 'index.html.twig' %}
+
+{% block content_header %}
+	Админка
+{% endblock %}
+{% block content %}
+	<p>Пользоватеели:</p>
+	<ul>
+		{% for u in users %}
+			<li>
+				{{ u.username }} {{ u.password }}
+				{% for r in u.roles %}
+					{{ r.name }}
+				{% endfor %}
+			</li>
+		{% endfor %}
+	</ul>
+	<p>Роли:</p>
+	<ul>
+		{% for r in roles %}
+			<li>{{ r.name }} {{ r.role }}</li>
+		{% endfor %}
+	</ul>
+	{% if orders %}
+		<p>Заказы:</p>
+		<ul>
+			{% for order in orders %}
+				<p>{{ order.user.username }}</p>
+				<table>
+					<tr><th>Наименование товара</th><th>Цена</th><th>Цена на момент заказа</th><th>Количество</th></tr>
+					{% for i in order.getOrderItems() %}
+						<tr><td>{{ i.item.name }}</td><td>{{ i.item.price }}</td><td>{{ i.price }}</td><td>{{ i.count }}</td></tr>
+					{% endfor %}
+				</table>
+				{{ order.getOrderItems().count() }}
+			{% endfor %}
+		</ul>
+	{% endif %}
+{% endblock %}

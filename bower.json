@@ -1,0 +1,23 @@
+{
+  "name": "shop",
+  "authors": [
+    "JIukaviy-PC <dobryniny07@mail.ru>"
+  ],
+  "description": "learning task",
+  "main": "",
+  "license": "GPL",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "web/assets/vendor/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.3",
+    "jqGrid": "jqgrid#^5.1.0"
+  }
+}

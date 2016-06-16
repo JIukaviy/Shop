@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Тестим бутстрап{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/bootstrap-override.css') }}">
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+{% endblock %}
+{% block body %}
+	<div class="container">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="/">Магазин</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li><a href="#">Войти</a></li>
+					<li><a href="#">Выйти</a></li>
+					<li><a href="#">Зайти</a></li>
+				</ul>
+			</div>
+		</nav>
+		<div class="row">
+			<div class="cos-sm-3 col-md-3 col-lg-3">
+				<nav class="navbar navbar-default">
+					<ul class="nav nav-pills nav-stacked">
+						<li><a href="#">Home</a></li>
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu 1</a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a href="#">Submenu 1-1</a></li>
+								<li><a href="#">Submenu 1-2</a></li>
+								<li><a href="#">Submenu 1-3</a></li>
+							</ul>
+						</li>
+						<li><a href="#">Menu 2</a></li>
+						<li><a href="#">Menu 3</a></li>
+					</ul>
+				</nav>
+			</div>
+			<div class="col-sm-9 col-md-9 col-lg-9">
+				<div class="container-fluid">
+					<ul class="breadcrumb">
+						<li><a href="#">Home</a></li>
+						<li><a href="#">Private</a></li>
+						<li><a href="#">Pictures</a></li>
+						<li class="active">Vacation</li>
+					</ul>
+					<a href="#" class="thumbnail thumbnail-item">
+						<img src="{{ asset('img/asus k501ux.jpg') }}" class="img-rounded" width="300" height="200">
+						<div class="caption">
+							<p class="text-center">Asus k501UX</p>
+						</div>
+					</a>
+					<a href="#" class="thumbnail thumbnail-item">
+						<img src="{{ asset('img/asus k501ux.jpg') }}" class="img-rounded" width="300" height="200">
+						<div class="caption">
+							<p class="text-center">Asus k501UX</p>
+						</div>
+					</a>
+					<a href="#" class="thumbnail thumbnail-item">
+						<img src="{{ asset('img/asus k501ux.jpg') }}" class="img-rounded" width="300" height="200">
+						<div class="caption">
+							<p class="text-center">Asus k501UX</p>
+						</div>
+					</a>
+					<a href="#" class="thumbnail thumbnail-item">
+						<img src="{{ asset('img/asus k501ux.jpg') }}" class="img-rounded" width="300" height="200">
+						<div class="caption">
+							<p class="text-center">Asus k501UX</p>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

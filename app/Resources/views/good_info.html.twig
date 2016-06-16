@@ -1,0 +1,80 @@
+{% extends 'index.html.twig' %}
+
+{% block title %}Информация о товаре{% endblock %}
+
+{% block content_header %}
+{% endblock %}
+
+{% block content %}
+	<div class="col-lg-7">
+		<div class="row">
+			<div class="container">
+				<h1>{{ item.name }}</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="container">
+				<p>{{ item.description }}</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="container">
+				<h3>Цена: {{ item.price }}</h3>
+			</div>
+		</div>
+		<div class="row">
+			<div class="container">
+		        {% if is_granted('ROLE_USER') %}
+			        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addedInCart" onclick="cart.add_item({{ item.id }})">
+				        Купить <span class="glyphicon glyphicon-shopping-cart"></span>
+			        </button>
+		        {% else %}
+			        <a class="btn btn-default" href="{{ path('_security_login') }}">
+				        Купить <span class="glyphicon glyphicon-shopping-cart"></span>
+			        </a>
+		        {% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-5">
+		<img src="{{ item.preview }}" class="img-thumbnail" width="400" height="400">
+	</div>
+	{% if is_granted('ROLE_USER') %}
+		<div id="addedInCart" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Информация</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="container-fluid">
+								<div class="col-lg-3">
+									<div class="row">
+										<img src="{{ item.preview }}" class="img-thumbnail" width="400" height="400">
+									</div>
+									<div class="row">
+										<p>{{ item.name }}</p>
+									</div>
+								</div>
+								<div class="col-lg-9">
+									<h4>Товар добавлен в вашу корзину</h4>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-1">
+								<div class="container">
+									<a href="{{ path('shop') }}" class="btn btn-default">Продолжить покупки</a>
+									<a href="{{ path('cart') }}" class="btn btn-primary">Перейти в корзину</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}

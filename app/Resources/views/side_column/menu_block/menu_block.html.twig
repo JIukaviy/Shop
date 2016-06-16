@@ -1,0 +1,7 @@
+<nav class="navbar navbar-default">
+    <ul class="nav nav-pills nav-stacked">
+        {% for menu_item in menu_items %}
+           <li><a href="{{ menu_item.url }}">{{ menu_item.label }}</a></li>
+        {% endfor %}
+    </ul>
+</nav>

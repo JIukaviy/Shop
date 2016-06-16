@@ -1,0 +1,30 @@
+{% extends 'index.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/good_info.css') }}">
+{% endblock %}
+
+{% block left_col %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content_header %}
+	<ul class="breadcrumb">
+		<li><a href="{{ path('shop') }}">Все товары</a></li>
+		{% for cat in path %}
+			<li><a href="{{ path('shop', {path: cat.path ~ cat.urlName}) }}">{{ cat.name }}</a></li>
+		{% endfor %}
+	</ul>
+{% endblock %}
+
+{% block content %}
+	<div class="item-row-group">
+	    {% for item in pagination %}
+		    {{ include('good_info_list_item/good_info_row.html.twig', { item: item }) }}
+	    {% else %}
+		    <p>В данной категории отсутсвуют товары</p>
+	    {% endfor %}
+	</div>
+	{{ knp_pagination_render(pagination) }}
+{% endblock %}
