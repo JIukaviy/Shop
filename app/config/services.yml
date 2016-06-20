@@ -16,3 +16,38 @@ services:
             tags:
                 - { name: knp_menu.menu_builder, method: buildCategoriesMenu, alias: categories }
 
+    admin.category:
+            class: AppBundle\Entity\DBCategoryAdmin
+            arguments: [~, AppBundle\Entity\DBCategory, ~]
+            tags:
+                - { name: sonata.admin, manager_type: orm, label: Категории }
+
+    admin.item:
+            class: AppBundle\Entity\DBItemAdmin
+            arguments: [~, AppBundle\Entity\DBItem, ~]
+            tags:
+                - { name: sonata.admin, manager_type: orm, label: Товары }
+
+    admin.order:
+            class: AppBundle\Entity\DBOrderAdmin
+            arguments: [~, AppBundle\Entity\DBOrder, ~]
+            tags:
+                - { name: sonata.admin, manager_type: orm, label: Заказы }
+
+    admin.order_item:
+            class: AppBundle\Entity\DBOrderItemAdmin
+            arguments: [~, AppBundle\Entity\DBOrderItem, ~]
+            tags:
+                - { name: sonata.admin, manager_type: orm, label: 'Элемент списка заказа', show_in_dashboard: false }
+
+    admin.user:
+            class: AppBundle\Entity\DBUserAdmin
+            arguments: [~, AppBundle\Entity\DBUser, ~]
+            tags:
+                - { name: sonata.admin, manager_type: orm, label: Пользователи }
+
+    admin.role:
+            class: AppBundle\Entity\DBRoleAdmin
+            arguments: [~, AppBundle\Entity\DBRole, ~]
+            tags:
+                - { name: sonata.admin, manager_type: orm, label: Роли }

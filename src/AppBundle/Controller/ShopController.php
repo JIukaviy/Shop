@@ -69,4 +69,41 @@ class ShopController extends Controller
 	public function cartPageAction(Request $request) {
 		return $this->render('cart.html.twig');
 	}
+
+	/**
+	 * @Route("/my_orders", name="my_orders")
+	 */
+	public function myOrdersPageAction(Request $request) {
+		$orders = $this->getUser()->getOrders();
+
+		$page_number = $request->query->get('page', 1);
+
+		$pagination = $this->get('knp_paginator')->paginate(
+			$orders,
+			$page_number,
+			5
+		);
+		
+		return $this->render('my_orders.html.twig', array(
+			'pagination' => $pagination
+		));
+	}
+
+	/**
+	 * @Route("/order_info/{id}", name="order_info", requirements={"id": "\d+"})
+	 */
+	public function orderInfoPageAction(Request $request, $id) {
+		$user = $this->getUser();
+		$order = $this->getDoctrine()->getRepository('AppBundle:DBOrder')->find($id);
+		if(!$order) {
+			$this->createNotFoundException('Order does not exist');
+		}
+		if ($order->getUser() != $this->getUser()) {
+			throw $this->createAccessDeniedException('This is not your order');
+		}
+
+		return $this->render('order_info.html.twig', array(
+			'order' => $order
+		));
+	}
 }
